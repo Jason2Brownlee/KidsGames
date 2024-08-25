@@ -7,6 +7,8 @@ Visit: <https://jason2brownlee.github.io/KidsGames/>
 
 ## Simple 2D Space Shooter
 
+![Space Shooter](space_shooter/space_shooter.png)
+
 The Space Shooter game is an engaging 2D browser-based arcade game where players control a spaceship to defend against waves of incoming aliens. Players can move the spaceship left and right, firing multiple missiles that increase in number as their score climbs. Each time an alien bypasses the player, health decreases, indicated by both a status bar reduction and a brief screen flash. The game keeps track of the top five high scores, which are stored persistently in the browser's local storage along with timestamps, adding a competitive edge. The game ends when the player's health is fully depleted, challenging players to achieve higher scores with each playthrough.
 
 * [Click to play now](space_shooter/space_shooter6.html)
