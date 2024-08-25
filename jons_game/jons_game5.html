@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Shooter</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: black;
+        }
+        canvas {
+            display: block;
+            margin: auto;
+            background-color: #000;
+            border: 2px solid white;
+        }
+        #score {
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            margin-top: 10px;
+        }
+        #statusBarContainer {
+            width: 300px;
+            height: 20px;
+            border: 2px solid white;
+            background-color: grey;
+            margin: 10px auto;
+        }
+        #statusBar {
+            width: 100%;
+            height: 100%;
+            background-color: red;
+        }
+        #highScores {
+            color: white;
+            font-size: 18px;
+            text-align: center;
+            margin-top: 10px;
+        }
+        #highScores ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        #highScores li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <div id="score">Score: 0</div>
+    <div id="statusBarContainer">
+        <div id="statusBar"></div>
+    </div>
+    <div id="highScores">
+        <h3>High Scores</h3>
+        <ul id="scoreList"></ul>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 800;
+        canvas.height = 600;
+
+        let score = 0;
+        let status = 100;
+        let missileCount = 3;
+        const shipWidth = 50;
+        const shipHeight = 30;
+        const alienWidth = 40;
+        const alienHeight = 30;
+        const missileWidth = 5;
+        const missileHeight = 10;
+
+        const ship = {
+            x: canvas.width / 2 - shipWidth / 2,
+            y: canvas.height - shipHeight - 10,
+            width: shipWidth,
+            height: shipHeight,
+            speed: 7,
+            moveLeft: false,
+            moveRight: false
+        };
+
+        const missiles = [];
+        const aliens = [];
+        let alienSpeed = 1;
+        let gameOver = false;
+        let shooting = false;
+        let highScores = [];
+
+        function createAlien() {
+            const x = Math.random() * (canvas.width - alienWidth);
+            const y = Math.random() * 100;
+            aliens.push({ x, y, width: alienWidth, height: alienHeight, speed: alienSpeed });
+        }
+
+        function updateGame() {
+            if (gameOver) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw spaceship
+            ctx.fillStyle = 'white';
+            ctx.fillRect(ship.x, ship.y, ship.width, ship.height);
+
+            // Move spaceship
+            if (ship.moveLeft && ship.x > 0) {
+                ship.x -= ship.speed;
+            }
+            if (ship.moveRight && ship.x < canvas.width - ship.width) {
+                ship.x += ship.speed;
+            }
+
+            // Update and draw missiles
+            missiles.forEach((missile, index) => {
+                missile.y -= missile.speed;
+                missile.x += missile.directionX;
+                if (missile.y < 0 || missile.x < 0 || missile.x > canvas.width) {
+                    missiles.splice(index, 1);
+                } else {
+                    ctx.fillStyle = 'red';
+                    ctx.fillRect(missile.x, missile.y, missile.width, missile.height);
+                }
+            });
+
+            // Create and update aliens
+            if (Math.random() < 0.02) {
+                createAlien();
+            }
+            aliens.forEach((alien, index) => {
+                alien.y += alien.speed;
+                if (alien.y > canvas.height) {
+                    aliens.splice(index, 1);
+                    status -= 10;
+                    updateStatusBar();
+                    if (status <= 0) {
+                        gameOver = true;
+                        saveHighScore();
+                        alert("Game Over! Final Score: " + score);
+                        document.location.reload();
+                    }
+                } else {
+                    ctx.fillStyle = 'green';
+                    ctx.fillRect(alien.x, alien.y, alien.width, alien.height);
+                }
+            });
+
+            // Check for collisions between missiles and aliens
+            missiles.forEach((missile, missileIndex) => {
+                aliens.forEach((alien, alienIndex) => {
+                    if (
+                        missile.x < alien.x + alien.width &&
+                        missile.x + missile.width > alien.x &&
+                        missile.y < alien.y + alien.height &&
+                        missile.y + missile.height > alien.y
+                    ) {
+                        missiles.splice(missileIndex, 1);
+                        aliens.splice(alienIndex, 1);
+                        score += 10;
+                        updateScore();
+                        updateMissileCount();
+                    }
+                });
+            });
+
+            // Gradually increase alien speed
+            alienSpeed += 0.001;
+
+            requestAnimationFrame(updateGame);
+        }
+
+        function updateScore() {
+            document.getElementById('score').innerText = `Score: ${score}`;
+        }
+
+        function updateStatusBar() {
+            const statusBar = document.getElementById('statusBar');
+            statusBar.style.width = `${status}%`;
+            if (status <= 0) {
+                statusBar.style.width = '0%';
+            }
+        }
+
+        function updateMissileCount() {
+            missileCount = 3 + Math.floor(score / 100);
+        }
+
+        function shootMissiles() {
+            const directions = missileCount === 1 ? [0] : Array.from({ length: missileCount }, (_, i) => -2 + (i * 4) / (missileCount - 1));
+            directions.forEach(directionX => {
+                missiles.push({
+                    x: ship.x + ship.width / 2 - missileWidth / 2,
+                    y: ship.y,
+                    width: missileWidth,
+                    height: missileHeight,
+                    speed: 10,
+                    directionX: directionX
+                });
+            });
+        }
+
+        function saveHighScore() {
+            const timestamp = new Date().toLocaleString();
+            highScores.push({ score, timestamp });
+            highScores.sort((a, b) => b.score - a.score);
+            if (highScores.length > 5) highScores.pop();  // Keep only top 5 scores
+            displayHighScores();
+        }
+
+        function displayHighScores() {
+            const scoreList = document.getElementById('scoreList');
+            scoreList.innerHTML = '';
+            highScores.forEach(entry => {
+                const li = document.createElement('li');
+                li.innerText = `${entry.score} - ${entry.timestamp}`;
+                scoreList.appendChild(li);
+            });
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                ship.moveLeft = true;
+            } else if (e.key === 'ArrowRight') {
+                ship.moveRight = true;
+            } else if (e.key === ' ') {
+                shootMissiles();
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.key === 'ArrowLeft') {
+                ship.moveLeft = false;
+            } else if (e.key === 'ArrowRight') {
+                ship.moveRight = false;
+            }
+        });
+
+        updateGame();
+    </script>
+</body>
+</html>
