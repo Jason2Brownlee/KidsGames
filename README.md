@@ -11,7 +11,7 @@ The Space Shooter game is an engaging 2D browser-based arcade game where players
 
 * [Click to play now](space_shooter/space_shooter6.html)
 
-(prior versions: [version 1](space_shooter/space_shooter1.html), [version 2](space_shooter/space_shooter2.html), [version 3](space_shooter/space_shooter3.html), [version 4](space_shooter/space_shooter4.html), [version 5](space_shooter/space_shooter5.html))
+(prior versions: [version1](space_shooter/space_shooter1.html), [version2](space_shooter/space_shooter2.html), [version3](space_shooter/space_shooter3.html), [version4](space_shooter/space_shooter4.html), [version5](space_shooter/space_shooter5.html))
 
 ### Game Controls:
 * Use the Left Arrow key to move the spaceship left.
