@@ -12,6 +12,7 @@ The Space Shooter game is an engaging 2D browser-based arcade game where players
 * Use the Left Arrow key to move the spaceship left.
 * Use the Right Arrow key to move the spaceship right.
 * Press the Spacebar to fire missiles at the aliens.
+
 ### Game Mechanics:
 * The goal is to shoot down the aliens to gain points.
 * You start with fully health. Each time an alien reaches the bottom of the screen, you lose health.
@@ -33,6 +34,7 @@ In this thrilling 2D browser-based game, you pilot a tiny rocket ship navigating
 ### Game Controls:
 * Arrow Left/Right: Move the rocket left or right.
 * Space Bar: Fire the rocket's jets to move upwards. The fire animation will appear, and the thrust bar will decrease. The thrust bar now regenerates faster.
+
 ### Game Mechanics:
 * Objective: Reach the red platform to complete the level. Avoid grey meteors, and try to collect green health meteors to restore health.
 
