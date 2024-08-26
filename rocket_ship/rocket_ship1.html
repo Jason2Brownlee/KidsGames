@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rocket Ship Game</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            display: block;
+            background-color: black;
+        }
+        #health-bar {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 200px;
+            height: 20px;
+            background-color: grey;
+        }
+        #health {
+            width: 100%;
+            height: 100%;
+            background-color: green;
+        }
+        #score {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="health-bar">
+        <div id="health"></div>
+    </div>
+    <div id="score">Score: 0</div>
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const gravity = 0.05;
+        const thrustPower = 0.1;
+        const lateralSpeed = 2;
+        const rocket = {
+            x: canvas.width / 2,
+            y: canvas.height - 50,
+            width: 20,
+            height: 40,
+            dx: 0,
+            dy: 0,
+            health: 100,
+        };
+        let score = 0;
+        let level = 1;
+        let meteors = [];
+        let stars = [];
+        let endPlatform = { x: 0, y: 0, width: 100, height: 10 };
+
+        function generateStars() {
+            stars = [];
+            for (let i = 0; i < 100; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 2,
+                });
+            }
+        }
+
+        function generateMeteors() {
+            meteors = [];
+            for (let i = 0; i < level * 5; i++) {
+                meteors.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    dx: (Math.random() - 0.5) * 4,
+                    dy: (Math.random() - 0.5) * 4,
+                    size: Math.random() * 20 + 10,
+                });
+            }
+        }
+
+        function generateEndPlatform() {
+            endPlatform = {
+                x: Math.random() * (canvas.width - 100),
+                y: Math.random() * (canvas.height / 2),
+                width: 100,
+                height: 10,
+            };
+        }
+
+        function drawStars() {
+            ctx.fillStyle = 'white';
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function drawRocket() {
+            ctx.fillStyle = 'white';
+            ctx.fillRect(rocket.x, rocket.y, rocket.width, rocket.height);
+        }
+
+        function drawMeteors() {
+            ctx.fillStyle = 'grey';
+            meteors.forEach(meteor => {
+                ctx.beginPath();
+                ctx.arc(meteor.x, meteor.y, meteor.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function drawEndPlatform() {
+            ctx.fillStyle = 'green';
+            ctx.fillRect(endPlatform.x, endPlatform.y, endPlatform.width, endPlatform.height);
+        }
+
+        function drawHealth() {
+            document.getElementById('health').style.width = rocket.health + '%';
+        }
+
+        function drawScore() {
+            document.getElementById('score').innerText = 'Score: ' + score;
+        }
+
+        function applyPhysics() {
+            rocket.dy += gravity;
+            rocket.x += rocket.dx;
+            rocket.y += rocket.dy;
+
+            // Keep the rocket within the bounds of the canvas
+            if (rocket.x < 0) rocket.x = 0;
+            if (rocket.x + rocket.width > canvas.width) rocket.x = canvas.width - rocket.width;
+            if (rocket.y < 0) rocket.y = 0;
+            if (rocket.y + rocket.height > canvas.height) rocket.y = canvas.height - rocket.height;
+        }
+
+        function checkCollisions() {
+            // Check collision with meteors
+            meteors.forEach(meteor => {
+                if (
+                    rocket.x < meteor.x + meteor.size &&
+                    rocket.x + rocket.width > meteor.x &&
+                    rocket.y < meteor.y + meteor.size &&
+                    rocket.y + rocket.height > meteor.y
+                ) {
+                    rocket.health -= 1;
+                    if (rocket.health <= 0) {
+                        alert('Game Over! Your score: ' + score);
+                        resetGame();
+                    }
+                }
+            });
+
+            // Check if the rocket reaches the end platform
+            if (
+                rocket.x < endPlatform.x + endPlatform.width &&
+                rocket.x + rocket.width > endPlatform.x &&
+                rocket.y < endPlatform.y + endPlatform.height &&
+                rocket.y + rocket.height > endPlatform.y
+            ) {
+                score += Math.floor(1000 / (level + 1));
+                level++;
+                startNewLevel();
+            }
+        }
+
+        function moveMeteors() {
+            meteors.forEach(meteor => {
+                meteor.x += meteor.dx;
+                meteor.y += meteor.dy;
+
+                if (meteor.x < 0 || meteor.x > canvas.width) meteor.dx *= -1;
+                if (meteor.y < 0 || meteor.y > canvas.height) meteor.dy *= -1;
+            });
+        }
+
+        function resetGame() {
+            score = 0;
+            level = 1;
+            rocket.health = 100;
+            rocket.x = canvas.width / 2;
+            rocket.y = canvas.height - 50;
+            startNewLevel();
+        }
+
+        function startNewLevel() {
+            generateStars();
+            generateMeteors();
+            generateEndPlatform();
+            rocket.x = canvas.width / 2;
+            rocket.y = canvas.height - 50;
+            rocket.dx = 0;
+            rocket.dy = 0;
+        }
+
+        function update() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawStars();
+            drawRocket();
+            drawMeteors();
+            drawEndPlatform();
+            drawHealth();
+            drawScore();
+            applyPhysics();
+            moveMeteors();
+            checkCollisions();
+
+            requestAnimationFrame(update);
+        }
+
+        document.addEventListener('keydown', function (event) {
+            if (event.code === 'ArrowLeft') {
+                rocket.dx = -lateralSpeed;
+            } else if (event.code === 'ArrowRight') {
+                rocket.dx = lateralSpeed;
+            } else if (event.code === 'Space') {
+                rocket.dy = -thrustPower;
+            }
+        });
+
+        document.addEventListener('keyup', function (event) {
+            if (event.code === 'ArrowLeft' || event.code === 'ArrowRight') {
+                rocket.dx = 0;
+            }
+        });
+
+        resetGame();
+        update();
+    </script>
+</body>
+</html>

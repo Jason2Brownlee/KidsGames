@@ -11,7 +11,7 @@ The Space Shooter game is an engaging 2D browser-based arcade game where players
 
 * [Click to play now](space_shooter/space_shooter6.html)
 
-(prior versions: [version1](space_shooter/space_shooter1.html), [version2](space_shooter/space_shooter2.html), [version3](space_shooter/space_shooter3.html), [version4](space_shooter/space_shooter4.html), [version5](space_shooter/space_shooter5.html))
+([see old versions](space_shooter/))
 
 ### Game Controls:
 * Use the Left Arrow key to move the spaceship left.
@@ -25,3 +25,21 @@ The Space Shooter game is an engaging 2D browser-based arcade game where players
 Developed August 26 2024 with ChatGPT4o.
 
 [![Space Shooter](space_shooter/space_shooter.png)](space_shooter/space_shooter6.html)
+
+
+## Rocket Ship
+
+In this thrilling 2D browser-based game, you pilot a tiny rocket ship navigating through the vastness of space, aiming to reach a designated red platform while avoiding perilous meteors. With limited thrust power, which regenerates over time, you must carefully control your rocket's movement using precise bursts of thrust to avoid getting stuck in the gravity well or colliding with obstacles. To aid your journey, green health meteors occasionally appear, providing a much-needed boost to your health when collected. The challenge escalates with each level as you race against time, making quick decisions to dodge hazards and reach your goal while preserving your rocket’s integrity.
+
+* [Click to play now](rocket_ship/rocket_ship5.html)
+
+([see old versions](rocket_ship/))
+
+### Game Controls:
+
+* Arrow Left/Right: Move the rocket left or right.
+* Space Bar: Fire the rocket's jets to move upwards. The fire animation will appear, and the thrust bar will decrease. The thrust bar now regenerates faster.
+* Objective: Reach the red platform to complete the level. Avoid grey meteors, and try to collect green health meteors to restore health.
+
+
+[![Rocket Ship](rocket_ship/rocket_ship.png)](rocket_ship/rocket_ship5.html)
