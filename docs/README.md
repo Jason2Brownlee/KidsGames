@@ -1,10 +1,6 @@
-# Kids Games
-
 Little CSS/JS games developed by Jon and Alex with ChatGPT.
 
-Visit: <https://jason2brownlee.github.io/KidsGames/>
-
-## Space Shooter
+## [Space Shooter](space_shooter/space_shooter6.html)
 
 The Space Shooter game is an engaging 2D browser-based arcade game where players control a spaceship to defend against waves of incoming aliens. Players can move the spaceship left and right, firing multiple missiles that increase in number as their score climbs. Each time an alien bypasses the player, health decreases, indicated by both a status bar reduction and a brief screen flash. The game keeps track of the top five high scores, which are stored persistently in the browser's local storage along with timestamps, adding a competitive edge. The game ends when the player's health is fully depleted, challenging players to achieve higher scores with each playthrough.
 
@@ -26,7 +22,7 @@ Developed August 25 2024 with ChatGPT4o.
 [![Space Shooter](space_shooter/space_shooter.png)](space_shooter/space_shooter6.html)
 
 
-## Rocket Ship
+## [Rocket Ship](rocket_ship/rocket_ship5.html)
 
 In this thrilling 2D browser-based game, you pilot a tiny rocket ship navigating through the vastness of space, aiming to reach a designated red platform while avoiding perilous meteors. With limited thrust power, which regenerates over time, you must carefully control your rocket's movement using precise bursts of thrust to avoid getting stuck in the gravity well or colliding with obstacles. To aid your journey, green health meteors occasionally appear, providing a much-needed boost to your health when collected. The challenge escalates with each level as you race against time, making quick decisions to dodge hazards and reach your goal while preserving your rocket’s integrity.
 
