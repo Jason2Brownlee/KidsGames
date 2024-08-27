@@ -44,11 +44,11 @@ Developed August 26 2024 with ChatGPT4o.
 
 
 
-## [Stickman](stick-man/stickman11.html)
+## [Stickman](stickman/stickman11.html)
 
 In this exciting side-scrolling platformer, players take on the role of a determined runner navigating through a series of increasingly challenging levels filled with treacherous pits and obstacles. As the game progresses, the world moves faster, testing the player's reflexes and precision jumping skills. A dynamic progress bar at the top of the screen tracks the player's journey toward the level's end, while a level indicator keeps them informed of their advancement. Each level culminates in a congratulatory message and a prompt to continue to the next, where the difficulty ramps up. With intuitive controls and escalating challenges, this game offers an engaging and rewarding experience for players seeking a thrilling platformer adventure.
 
-* [Click to play now](stick-man/stickman11.html)
+* [Click to play now](stickman/stickman11.html)
 
 ### Game Controls:
 
@@ -59,4 +59,4 @@ In this exciting side-scrolling platformer, players take on the role of a determ
 
 Developed August 27 2024 with ChatGPT4o.
 
-[![Stickman](stick-man/stickman.png)](stick-man/stickman11.html)
+[![Stickman](stickman/stickman.png)](stickman/stickman11.html)
