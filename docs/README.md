@@ -41,3 +41,22 @@ In this thrilling 2D browser-based game, you pilot a tiny rocket ship navigating
 Developed August 26 2024 with ChatGPT4o.
 
 [![Rocket Ship](rocket_ship/rocket_ship.png)](rocket_ship/rocket_ship5.html)
+
+
+
+## [Stickman](stick-man/stickman11.html)
+
+In this exciting side-scrolling platformer, players take on the role of a determined runner navigating through a series of increasingly challenging levels filled with treacherous pits and obstacles. As the game progresses, the world moves faster, testing the player's reflexes and precision jumping skills. A dynamic progress bar at the top of the screen tracks the player's journey toward the level's end, while a level indicator keeps them informed of their advancement. Each level culminates in a congratulatory message and a prompt to continue to the next, where the difficulty ramps up. With intuitive controls and escalating challenges, this game offers an engaging and rewarding experience for players seeking a thrilling platformer adventure.
+
+* [Click to play now](stick-man/stickman11.html)
+
+### Game Controls:
+
+- **Right Arrow Key (`→`)**: Move the player to the right.
+- **Left Arrow Key (`←`)**: Move the player to the left.
+- **Up Arrow Key (`↑`)**: Make the player jump.
+- **Any Key**: Restart the game after "Game Over" or advance to the next level after completing a level.
+
+Developed August 27 2024 with ChatGPT4o.
+
+[![Stickman](stick-man/stickman.png)](stick-man/stickman11.html)

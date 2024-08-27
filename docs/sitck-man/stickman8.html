@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Side Scrolling Platformer</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            background: #87CEEB; /* Sky blue background */
+        }
+        #game {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(to bottom, #87CEEB, #4682B4);
+        }
+    </style>
+</head>
+<body>
+    <div id="game">
+        <canvas id="gameCanvas"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Player settings
+        const player = {
+            x: 50,
+            y: canvas.height - 150,
+            width: 50,
+            height: 100,
+            speed: 5,
+            velocityX: 0,
+            velocityY: 0,
+            gravity: 1,
+            jumpPower: -20, // Increased jump power for higher jumps
+            grounded: false
+        };
+
+        // Ground and level settings
+        const groundHeight = 20;
+        let levelOffset = 0;
+        const levelEnd = 5000; // Length of the level
+        const levelItems = [];
+        const levelSpeed = 3;
+
+        // Generate ground with pits only (no hills)
+        function generateLevel() {
+            let currentX = 0;
+            const groundY = canvas.height - groundHeight;
+
+            // Ensure the first screen is flat ground
+            const firstSegmentLength = canvas.width;
+            levelItems.push({
+                x: currentX,
+                y: groundY,
+                width: firstSegmentLength,
+                height: groundHeight,
+                type: 'ground'
+            });
+            currentX += firstSegmentLength;
+
+            // Generate the rest of the level with pits only
+            while (currentX < levelEnd) {
+                const segmentLength = Math.random() * 100 + 100; // Shorter segments for more frequent obstacles
+
+                if (Math.random() < 0.5) {
+                    // Flat ground
+                    levelItems.push({
+                        x: currentX,
+                        y: groundY,
+                        width: segmentLength,
+                        height: groundHeight,
+                        type: 'ground'
+                    });
+                } else {
+                    // Pit
+                    levelItems.push({
+                        x: currentX,
+                        y: groundY + 100,
+                        width: segmentLength,
+                        height: groundHeight,
+                        type: 'pit'
+                    });
+                }
+                currentX += segmentLength;
+            }
+
+            // Add end flag
+            levelItems.push({
+                x: levelEnd - 100,
+                y: groundY - 100,
+                width: 20,
+                height: 100,
+                type: 'end'
+            });
+        }
+
+        // Handle player movement
+        function updatePlayer() {
+            // Apply gravity
+            player.velocityY += player.gravity;
+            player.y += player.velocityY;
+
+            player.grounded = false;
+
+            // Check for collisions with level items
+            levelItems.forEach(item => {
+                if (player.x + player.width > item.x - levelOffset &&
+                    player.x < item.x + item.width - levelOffset &&
+                    player.y + player.height > item.y &&
+                    player.y < item.y + item.height) {
+
+                    if (item.type === 'ground') {
+                        // Allow landing on ground
+                        if (player.velocityY > 0 && player.y + player.height <= item.y + player.velocityY) {
+                            player.y = item.y - player.height;
+                            player.velocityY = 0;
+                            player.grounded = true;
+                        }
+                    } else if (item.type === 'pit') {
+                        if (player.y + player.height > item.y) {
+                            alert('You fell into a pit! Game over!');
+                            resetGame();
+                        }
+                    } else if (item.type === 'end') {
+                        alert('Level Complete!');
+                        resetGame();
+                    }
+                }
+            });
+
+            // Horizontal movement
+            if (keys['ArrowRight']) {
+                player.velocityX = player.speed;
+            } else if (keys['ArrowLeft']) {
+                player.velocityX = -player.speed;
+            } else {
+                player.velocityX = 0;
+            }
+
+            // Jump with up arrow
+            if (keys['ArrowUp'] && player.grounded) {
+                player.velocityY = player.jumpPower;
+                player.grounded = false;
+            }
+
+            player.x += player.velocityX;
+
+            // Keep player within screen bounds
+            if (player.x < 0) {
+                alert('You were pushed off the screen! Game over!');
+                resetGame();
+            }
+            if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+
+            // Move the level
+            levelOffset += levelSpeed;
+        }
+
+        // Draw the player and level
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw background
+            drawBackground();
+
+            // Draw player
+            ctx.fillStyle = 'black';
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+
+            // Draw level items
+            levelItems.forEach(item => {
+                if (item.type === 'ground') {
+                    ctx.fillStyle = 'brown';
+                } else if (item.type === 'pit') {
+                    ctx.fillStyle = 'black';
+                } else if (item.type === 'end') {
+                    ctx.fillStyle = 'red';
+                }
+                ctx.fillRect(item.x - levelOffset, item.y, item.width, item.height);
+            });
+        }
+
+        // Draw the background
+        function drawBackground() {
+            ctx.fillStyle = '#87CEEB';
+            ctx.fillRect(0, 0, canvas.width, canvas.height * 0.6);
+
+            ctx.fillStyle = '#4682B4';
+            ctx.fillRect(0, canvas.height * 0.6, canvas.width, canvas.height * 0.4);
+
+            // Draw simple mountains
+            ctx.fillStyle = '#708090';
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height * 0.6);
+            ctx.lineTo(canvas.width * 0.25, canvas.height * 0.3);
+            ctx.lineTo(canvas.width * 0.5, canvas.height * 0.6);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(canvas.width * 0.5, canvas.height * 0.6);
+            ctx.lineTo(canvas.width * 0.75, canvas.height * 0.2);
+            ctx.lineTo(canvas.width, canvas.height * 0.6);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        // Game loop
+        function gameLoop() {
+            updatePlayer();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Handle input
+        const keys = {};
+        window.addEventListener('keydown', e => keys[e.key] = true);
+        window.addEventListener('keyup', e => keys[e.key] = false);
+
+        // Reset the game
+        function resetGame() {
+            // Reset player position and movement
+            player.x = 50;
+            player.y = canvas.height - 150;
+            player.velocityX = 0;
+            player.velocityY = 0;
+            player.grounded = false;
+
+            // Reset level offset
+            levelOffset = 0;
+
+            // Clear and regenerate level
+            levelItems.length = 0;
+            generateLevel();
+        }
+
+        // Start the game
+        generateLevel();
+        gameLoop();
+    </script>
+</body>
+</html>
